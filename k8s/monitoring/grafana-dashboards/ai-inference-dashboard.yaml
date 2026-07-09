@@ -1,0 +1,70 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ai-inference-dashboard
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+    app.kubernetes.io/name: ai-inference-dashboard
+    app.kubernetes.io/part-of: ai-platform-observability
+data:
+  ai-inference-dashboard.json: |
+    {
+      "title": "AI Inference API",
+      "schemaVersion": 39,
+      "version": 1,
+      "tags": ["ai-platform", "fastapi", "inference"],
+      "timezone": "browser",
+      "panels": [
+        {
+          "type": "stat",
+          "title": "Inference RPS",
+          "targets": [
+            {
+              "expr": "sum(rate(http_requests_total{route=\"/v1/inference\"}[5m]))"
+            }
+          ],
+          "gridPos": { "h": 8, "w": 8, "x": 0, "y": 0 }
+        },
+        {
+          "type": "stat",
+          "title": "5xx Error Rate",
+          "targets": [
+            {
+              "expr": "sum(rate(http_requests_total{route=\"/v1/inference\",status=~\"5..\"}[5m])) / clamp_min(sum(rate(http_requests_total{route=\"/v1/inference\"}[5m])), 1)"
+            }
+          ],
+          "gridPos": { "h": 8, "w": 8, "x": 8, "y": 0 }
+        },
+        {
+          "type": "stat",
+          "title": "Provider Failures",
+          "targets": [
+            {
+              "expr": "sum(rate(inference_provider_failures_total[5m]))"
+            }
+          ],
+          "gridPos": { "h": 8, "w": 8, "x": 16, "y": 0 }
+        },
+        {
+          "type": "timeseries",
+          "title": "p95 Latency",
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.95, sum by (le) (rate(http_request_duration_seconds_bucket{route=\"/v1/inference\"}[5m])))"
+            }
+          ],
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 }
+        },
+        {
+          "type": "timeseries",
+          "title": "Requests by Status",
+          "targets": [
+            {
+              "expr": "sum by (status) (rate(http_requests_total{route=\"/v1/inference\"}[5m]))"
+            }
+          ],
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 }
+        }
+      ]
+    }

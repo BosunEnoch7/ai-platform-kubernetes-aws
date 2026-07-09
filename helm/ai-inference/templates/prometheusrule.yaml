@@ -1,0 +1,57 @@
+{{- if and .Values.monitoring.enabled .Values.monitoring.prometheusRule.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ include "ai-inference.fullname" . }}
+  labels:
+    {{- include "ai-inference.labels" . | nindent 4 }}
+    {{- with .Values.monitoring.prometheusRule.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  groups:
+    - name: ai-inference.rules
+      rules:
+        {{- if .Values.monitoring.prometheusRule.alerts.highErrorRate.enabled }}
+        - alert: AIInferenceHighErrorRate
+          expr: |
+            sum(rate(http_requests_total{route="/v1/inference",status=~"5.."}[5m]))
+            /
+            clamp_min(sum(rate(http_requests_total{route="/v1/inference"}[5m])), 1)
+            > {{ .Values.monitoring.prometheusRule.alerts.highErrorRate.threshold }}
+          for: {{ .Values.monitoring.prometheusRule.alerts.highErrorRate.duration }}
+          labels:
+            severity: warning
+            service: ai-inference
+          annotations:
+            summary: AI inference API has elevated 5xx error rate
+            description: More than {{ mulf .Values.monitoring.prometheusRule.alerts.highErrorRate.threshold 100 }}% of inference requests are failing.
+        {{- end }}
+        {{- if .Values.monitoring.prometheusRule.alerts.highLatencyP95.enabled }}
+        - alert: AIInferenceHighP95Latency
+          expr: |
+            histogram_quantile(
+              0.95,
+              sum by (le) (rate(http_request_duration_seconds_bucket{route="/v1/inference"}[5m]))
+            )
+            > {{ .Values.monitoring.prometheusRule.alerts.highLatencyP95.thresholdSeconds }}
+          for: {{ .Values.monitoring.prometheusRule.alerts.highLatencyP95.duration }}
+          labels:
+            severity: warning
+            service: ai-inference
+          annotations:
+            summary: AI inference API p95 latency is high
+            description: p95 latency for inference requests is above {{ .Values.monitoring.prometheusRule.alerts.highLatencyP95.thresholdSeconds }} second(s).
+        {{- end }}
+        {{- if .Values.monitoring.prometheusRule.alerts.providerFailures.enabled }}
+        - alert: AIInferenceProviderFailures
+          expr: sum(rate(inference_provider_failures_total[5m])) > 0
+          for: {{ .Values.monitoring.prometheusRule.alerts.providerFailures.duration }}
+          labels:
+            severity: warning
+            service: ai-inference
+          annotations:
+            summary: AI inference provider failures detected
+            description: The inference provider has reported failures for at least {{ .Values.monitoring.prometheusRule.alerts.providerFailures.duration }}.
+        {{- end }}
+{{- end }}

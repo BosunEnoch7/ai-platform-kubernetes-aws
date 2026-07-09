@@ -1,0 +1,9 @@
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: alb
+  labels:
+    app.kubernetes.io/name: alb
+    app.kubernetes.io/part-of: platform-networking
+spec:
+  controller: ingress.k8s.aws/alb

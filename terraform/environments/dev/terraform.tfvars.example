@@ -1,0 +1,25 @@
+aws_region                 = "eu-west-1"
+vpc_cidr                   = "10.20.0.0/16"
+nat_gateway_mode           = "single"
+enable_interface_endpoints = false
+
+# Pin this to a currently supported EKS version before a real apply.
+# Leaving it null lets AWS select the default version at creation time.
+kubernetes_version = null
+
+# For a real environment, replace this with your current public IP /32.
+cluster_public_access_cidrs = ["0.0.0.0/0"]
+
+node_instance_types = ["t3.medium"]
+node_capacity_type  = "ON_DEMAND"
+node_desired_size   = 2
+node_min_size       = 1
+node_max_size       = 3
+
+# These values must match the Helm service account created in the next phase.
+kubernetes_namespace       = "ai-platform"
+kubernetes_service_account = "ai-inference"
+
+additional_tags = {
+  CostCenter = "portfolio"
+}

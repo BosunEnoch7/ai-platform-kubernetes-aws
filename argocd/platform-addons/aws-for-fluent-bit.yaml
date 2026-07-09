@@ -1,0 +1,50 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: aws-for-fluent-bit
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: platform-addons
+spec:
+  project: platform
+  source:
+    repoURL: https://aws.github.io/eks-charts
+    chart: aws-for-fluent-bit
+    targetRevision: 0.2.0
+    helm:
+      releaseName: aws-for-fluent-bit
+      values: |
+        serviceAccount:
+          create: true
+          name: aws-for-fluent-bit
+          annotations:
+            eks.amazonaws.com/role-arn: arn:aws:iam::000000000000:role/ai-platform-kubernetes-aws-dev-aws-for-fluent-bit
+        cloudWatchLogs:
+          enabled: true
+          region: eu-west-1
+          logGroupName: /aws/eks/ai-platform-kubernetes-aws-dev/application
+          logStreamPrefix: from-fluent-bit-
+          autoCreateGroup: false
+        firehose:
+          enabled: false
+        kinesis:
+          enabled: false
+        elasticsearch:
+          enabled: false
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: amazon-cloudwatch
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

@@ -1,0 +1,158 @@
+replicaCount: 2
+
+image:
+  repository: ""
+  tag: ""
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  name: ai-inference
+  annotations:
+    eks.amazonaws.com/role-arn: ""
+
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/path: /metrics
+  prometheus.io/port: "8080"
+
+podLabels: {}
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 10001
+  runAsGroup: 10001
+  fsGroup: 10001
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  privileged: false
+  readOnlyRootFilesystem: true
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations: {}
+  hosts:
+    - host: ai-platform.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+config:
+  serviceName: ai-platform-api
+  environment: production
+  logLevel: INFO
+  provider: deterministic
+
+externalSecret:
+  enabled: true
+  secretStoreName: aws-secrets-manager
+  refreshInterval: 1h
+  targetSecretName: ai-provider
+  aws:
+    region: eu-west-1
+  remoteSecretName: ai-platform-kubernetes-aws-dev/ai-provider
+  data:
+    - secretKey: AI_PROVIDER_API_KEY
+      remoteRef:
+        property: api_key
+
+monitoring:
+  enabled: true
+  serviceMonitor:
+    interval: 30s
+    scrapeTimeout: 10s
+    path: /metrics
+    labels:
+      monitoring.ai-platform/enabled: "true"
+  prometheusRule:
+    enabled: true
+    labels:
+      monitoring.ai-platform/enabled: "true"
+    alerts:
+      highErrorRate:
+        enabled: true
+        threshold: 0.05
+        duration: 5m
+      highLatencyP95:
+        enabled: true
+        thresholdSeconds: 1
+        duration: 10m
+      providerFailures:
+        enabled: true
+        duration: 5m
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+tmpVolume:
+  enabled: true
+  medium: Memory
+  sizeLimit: 64Mi
+
+probes:
+  liveness:
+    path: /health/live
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 2
+    failureThreshold: 3
+  readiness:
+    path: /health/ready
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 2
+    failureThreshold: 3
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 70
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
+rollingUpdate:
+  maxUnavailable: 0
+  maxSurge: 1
+
+terminationGracePeriodSeconds: 30
+
+topologySpreadConstraints:
+  enabled: true
+  maxSkew: 1
+  topologyKey: topology.kubernetes.io/zone
+  whenUnsatisfiable: ScheduleAnyway
+
+networkPolicy:
+  enabled: true
+  ingressNamespaceLabels:
+    kubernetes.io/metadata.name: ingress-nginx
+  monitoringNamespaceLabels:
+    kubernetes.io/metadata.name: monitoring
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

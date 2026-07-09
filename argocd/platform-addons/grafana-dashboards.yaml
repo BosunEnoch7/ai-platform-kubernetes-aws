@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grafana-dashboards
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: platform-addons
+spec:
+  project: platform
+  source:
+    repoURL: https://github.com/REPLACE_WITH_GITHUB_USERNAME/ai-platform-kubernetes-aws.git
+    targetRevision: main
+    path: k8s/monitoring/grafana-dashboards
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

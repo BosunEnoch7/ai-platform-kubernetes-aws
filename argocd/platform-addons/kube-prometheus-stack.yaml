@@ -1,0 +1,100 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kube-prometheus-stack
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: platform-addons
+spec:
+  project: platform
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    chart: kube-prometheus-stack
+    targetRevision: REPLACE_WITH_PINNED_KUBE_PROMETHEUS_STACK_VERSION
+    helm:
+      releaseName: kube-prometheus-stack
+      values: |
+        fullnameOverride: kube-prometheus-stack
+        prometheus:
+          prometheusSpec:
+            serviceMonitorSelectorNilUsesHelmValues: false
+            serviceMonitorSelector:
+              matchLabels:
+                monitoring.ai-platform/enabled: "true"
+            ruleSelectorNilUsesHelmValues: false
+            ruleSelector:
+              matchLabels:
+                monitoring.ai-platform/enabled: "true"
+            retention: 7d
+            resources:
+              requests:
+                cpu: 250m
+                memory: 1Gi
+              limits:
+                cpu: 1000m
+                memory: 2Gi
+        grafana:
+          enabled: true
+          admin:
+            existingSecret: grafana-admin
+            userKey: admin-user
+            passwordKey: admin-password
+          defaultDashboardsEnabled: true
+          sidecar:
+            dashboards:
+              enabled: true
+              label: grafana_dashboard
+              searchNamespace: ALL
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+              limits:
+                cpu: 500m
+                memory: 512Mi
+        alertmanager:
+          enabled: true
+          config:
+            global:
+              resolve_timeout: 5m
+            route:
+              receiver: platform-null
+              group_by:
+                - alertname
+                - namespace
+                - service
+              group_wait: 30s
+              group_interval: 5m
+              repeat_interval: 4h
+              routes:
+                - receiver: platform-critical
+                  matchers:
+                    - severity = critical
+                  repeat_interval: 1h
+                - receiver: platform-warning
+                  matchers:
+                    - severity = warning
+                  repeat_interval: 4h
+            receivers:
+              - name: platform-null
+              - name: platform-critical
+              - name: platform-warning
+          alertmanagerSpec:
+            retention: 120h
+            resources:
+              requests:
+                cpu: 50m
+                memory: 128Mi
+              limits:
+                cpu: 250m
+                memory: 256Mi
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

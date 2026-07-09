@@ -1,0 +1,4 @@
+The {{ include "ai-inference.fullname" . }} workload has been installed.
+
+Verify it with:
+  kubectl -n {{ .Release.Namespace }} rollout status deployment/{{ include "ai-inference.fullname" . }}

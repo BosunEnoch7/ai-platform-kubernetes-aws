@@ -1,0 +1,22 @@
+image:
+  # Replace these placeholders with Terraform/CI outputs before deployment.
+  repository: 000000000000.dkr.ecr.eu-west-1.amazonaws.com/ai-platform-kubernetes-aws-dev-ai-inference
+  tag: replace-with-commit-sha
+
+serviceAccount:
+  name: ai-inference
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::000000000000:role/ai-platform-kubernetes-aws-dev-ai-inference
+
+ingress:
+  hosts:
+    - host: ai-platform.local
+      paths:
+        - path: /
+          pathType: Prefix
+
+config:
+  environment: development
+
+externalSecret:
+  remoteSecretName: ai-platform-kubernetes-aws-dev/ai-provider

@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ai-inference
+  namespace: argocd
+spec:
+  project: ai-platform
+  source:
+    repoURL: https://github.com/REPLACE_WITH_GITHUB_USERNAME/ai-platform-kubernetes-aws.git
+    targetRevision: main
+    path: helm/ai-inference
+    helm:
+      releaseName: ai-inference
+      valueFiles:
+        - values-dev.yaml
+      parameters:
+        - name: image.repository
+          value: 000000000000.dkr.ecr.eu-west-1.amazonaws.com/ai-platform-kubernetes-aws-dev-ai-inference
+        - name: image.tag
+          value: replace-with-commit-sha
+        - name: serviceAccount.annotations.eks\.amazonaws\.com/role-arn
+          value: arn:aws:iam::000000000000:role/ai-platform-kubernetes-aws-dev-ai-inference
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ai-platform
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+    retry:
+      limit: 3
+      backoff:
+        duration: 10s
+        factor: 2
+        maxDuration: 1m
