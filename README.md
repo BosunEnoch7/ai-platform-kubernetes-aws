@@ -81,6 +81,7 @@ No tool should silently take ownership of resources managed by another tool.
 | `k8s/` | Platform manifests such as ALB bridge and Grafana dashboard |
 | `architecture/` | ADRs and architecture diagrams |
 | `docs/` | Deployment, operations, security, observability, and cost guides |
+| `screenshots/` | Sanitized running evidence after live deployment |
 | `.github/workflows/` | CI and container build pipelines |
 
 ## Major platform features
@@ -168,6 +169,27 @@ Cost:
 
 - [Cost optimization](docs/cost/cost-optimization.md)
 - [Teardown guide](docs/cost/teardown.md)
+
+## Running screenshots and evidence
+
+Live screenshots are intentionally separated from source code and should be
+captured only after a real deployment. Do not include secrets, tokens, private
+keys, or sensitive account details.
+
+Use:
+
+- [Screenshots folder guide](screenshots/README.md)
+- [Screenshots checklist](docs/portfolio/screenshots-checklist.md)
+
+Recommended evidence to capture:
+
+| Area | Screenshot evidence |
+|---|---|
+| GitHub | README, passing CI workflow, container workflow |
+| AWS | EKS cluster, node group, ECR image tag, IRSA roles, CloudWatch log group |
+| Kubernetes | Argo CD apps, pods Ready, HPA, Ingress, ExternalSecret |
+| Traffic | `/health/live`, `/health/ready`, `/v1/inference` responses |
+| Observability | Prometheus target, Grafana dashboard, Alertmanager routing, CloudWatch logs |
 
 ## Important deployment placeholders
 

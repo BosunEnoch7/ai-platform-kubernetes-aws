@@ -55,6 +55,5 @@ or sensitive URLs.
 ## Portfolio polish
 
 - [ ] Final architecture diagram.
-- [ ] LinkedIn post.
 - [ ] Resume bullets.
 - [ ] STAR stories.
