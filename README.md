@@ -1,89 +1,216 @@
-# AI Platform on Kubernetes and AWS
+# ai-platform-kubernetes-aws
 
-A production-inspired AI platform demonstrating how inference workloads are
-deployed, secured, scaled, observed, and operated on Amazon EKS.
+Production-inspired AI infrastructure platform on Amazon EKS.
 
 **Owner:** Olatubosun Enoch David
 
-## Project intent
+**Project type:** AI Infrastructure, MLOps, DevOps, Platform Engineering, SRE
+**Status:** Portfolio implementation in progress; core platform foundation built
 
-This repository is an infrastructure and operations portfolio project. The
-inference API is intentionally small; the primary engineering work is the
-platform around it:
+## What this project demonstrates
 
-- reproducible AWS infrastructure;
-- Kubernetes application packaging;
-- GitOps-based delivery;
-- workload identity and external secrets;
-- safe rollouts and autoscaling;
-- application, Kubernetes, and AWS observability; and
-- operational documentation and evidence.
+This repository shows how an AI inference workload can be deployed, secured,
+scaled, observed, and operated on Kubernetes using AWS-native and CNCF tooling.
 
-## Architecture planes
+The FastAPI inference service is intentionally small. The real engineering
+value is the platform around it:
 
-The platform is separated into four concerns:
+- Amazon EKS infrastructure with Terraform;
+- private container images in Amazon ECR;
+- secure workload identity with IRSA;
+- AWS Secrets Manager integration through External Secrets Operator;
+- Helm packaging for the AI inference API;
+- GitOps delivery with Argo CD;
+- ALB-to-NGINX ingress architecture;
+- Horizontal Pod Autoscaler, probes, rolling updates, and PDBs;
+- Prometheus, Grafana, Alertmanager, and CloudWatch logging;
+- GitHub Actions CI/CD with AWS OIDC;
+- production-style deployment, troubleshooting, rollback, and cost docs.
 
-1. **Delivery plane:** GitHub Actions builds and verifies immutable images,
-   Amazon ECR stores them, and Argo CD reconciles Git into EKS.
-2. **Traffic plane:** an AWS load balancer forwards traffic through NGINX
-   Ingress to the FastAPI service and its healthy pods.
-3. **Security plane:** IAM Roles for Service Accounts (IRSA) gives workloads
-   narrowly scoped AWS access, while AWS Secrets Manager owns sensitive data.
-4. **Observability plane:** Prometheus, Grafana, and Alertmanager cover
-   application and Kubernetes signals; CloudWatch covers AWS-native logs and
-   infrastructure signals.
+## Architecture
 
-Detailed diagrams and threat boundaries will live in `architecture/`.
+```mermaid
+flowchart TD
+  client[Client] --> alb[AWS Application Load Balancer]
+  alb --> nginx[NGINX Ingress Controller]
+  nginx --> svc[Kubernetes Service]
+  svc --> pods[FastAPI AI Inference Pods]
+  pods --> provider[AI Provider Layer]
 
-## Tool ownership
+  pods --> metrics[/metrics]
+  metrics --> prometheus[Prometheus]
+  prometheus --> grafana[Grafana]
+  prometheus --> alertmanager[Alertmanager]
+
+  pods --> stdout[JSON stdout logs]
+  stdout --> fluentbit[AWS for Fluent Bit]
+  fluentbit --> cloudwatch[CloudWatch Logs]
+
+  secrets[AWS Secrets Manager] --> eso[External Secrets Operator]
+  eso --> k8ssecret[Kubernetes Secret]
+  k8ssecret --> pods
+```
+
+More diagrams:
+
+- [System architecture](architecture/diagrams/system-architecture.md)
+- [Delivery flow](architecture/diagrams/delivery-flow.md)
+- [Observability flow](architecture/diagrams/observability-flow.md)
+
+## Tool ownership model
 
 | Tool | Owns |
 |---|---|
-| Terraform | AWS infrastructure and foundational EKS integrations |
-| Helm | The reusable Kubernetes package for the inference application |
-| Argo CD | Continuous reconciliation of approved cluster state from Git |
-| GitHub Actions | Testing, scanning, building, and publishing artifacts |
+| Terraform | AWS infrastructure, EKS, IAM, ECR, Secrets Manager, CloudWatch Logs |
+| Helm | Reusable Kubernetes package for the AI inference application |
+| Argo CD | GitOps reconciliation of platform add-ons and app workloads |
+| GitHub Actions | Tests, validation, image build, and ECR push |
+| Prometheus/Grafana/Alertmanager | Metrics, dashboards, and alerting |
+| CloudWatch Logs | Centralized AWS log storage |
 
 No tool should silently take ownership of resources managed by another tool.
 
-## Planned repository areas
+## Repository map
 
 | Path | Purpose |
 |---|---|
-| `app/` | FastAPI service, provider abstraction, and unit tests |
-| `architecture/` | Diagrams, decisions, and threat model |
-| `terraform/` | AWS infrastructure modules and environment composition |
-| `helm/` | Versioned inference application chart |
-| `platform/` | Shared in-cluster capabilities |
-| `argocd/` | GitOps bootstrap, projects, and applications |
-| `monitoring/` | Dashboards, alerts, and monitoring configuration |
-| `tests/` | Smoke, integration, and load tests |
-| `docs/` | Deployment, operations, security, cost, and portfolio guides |
-| `screenshots/` | Curated, sanitized deployment evidence |
-| `scripts/` | Small repeatable validation and operational helpers |
+| `app/` | FastAPI inference API, provider abstraction, metrics, tests |
+| `terraform/` | AWS infrastructure modules and dev environment |
+| `helm/ai-inference/` | Production-style Helm chart for the app |
+| `argocd/` | Argo CD projects and Applications |
+| `k8s/` | Platform manifests such as ALB bridge and Grafana dashboard |
+| `architecture/` | ADRs and architecture diagrams |
+| `docs/` | Deployment, operations, security, observability, and cost guides |
+| `.github/workflows/` | CI and container build pipelines |
 
-Directories will be introduced only when their implementation phase begins.
+## Major platform features
 
-## Delivery status
+### Infrastructure
 
-- [x] Phase 1: architecture and project foundation
-- [x] Phase 2: architecture decision baseline
-- [x] Phase 3: minimal inference application
-- [ ] Phase 4: container build and local verification
-  - [x] Secure image definition and dependency lock
-  - [ ] Runtime verification (Docker engine unavailable)
-- [ ] Phase 5: AWS and EKS infrastructure
-  - [x] Remote-state bootstrap configuration
-  - [ ] Remote-state AWS deployment and migration
-  - [x] Network foundation configuration
-  - [ ] Network plan and AWS deployment
-  - [ ] EKS control plane and worker capacity
-- [ ] Phase 6: Helm deployment package
-- [ ] Phase 7: security and secrets integration
-- [ ] Phase 8: ingress and traffic management
-- [ ] Phase 9: observability
-- [ ] Phase 10: GitOps and CI
-- [ ] Phase 11: reliability, scaling, and failure testing
-- [ ] Phase 12: portfolio documentation and evidence
+- Multi-AZ VPC foundation.
+- Public/private subnet separation.
+- Cost-aware NAT Gateway strategy.
+- Amazon EKS managed node group baseline.
+- EKS OIDC provider for IRSA.
+- S3-native Terraform state locking.
 
-Each phase is reviewed before the next phase begins.
+### Application delivery
+
+- FastAPI inference API.
+- Docker image with non-root runtime user.
+- Immutable image tags.
+- Amazon ECR private repository.
+- Helm chart with schema validation.
+- Argo CD app deployment.
+- GitHub Actions CI and image build workflow.
+
+### Traffic management
+
+- AWS Load Balancer Controller.
+- NGINX Ingress Controller.
+- ALB-to-NGINX bridge.
+- App-level Ingress using `ingressClassName: nginx`.
+- Readiness/liveness probes.
+- Rolling updates with `maxUnavailable: 0`.
+
+### Security
+
+- IRSA for app workload, AWS Load Balancer Controller, External Secrets, and Fluent Bit.
+- AWS Secrets Manager as the secret source of truth.
+- External Secrets Operator for Kubernetes Secret projection.
+- Read-only container filesystem.
+- Dropped Linux capabilities.
+- NetworkPolicy baseline.
+- No secret values committed to Git or Terraform state.
+
+### Reliability and scaling
+
+- HPA with CPU target.
+- PodDisruptionBudget.
+- Soft topology spread constraints.
+- Resource requests and limits.
+- Explicit rollback guide.
+- Operational runbooks.
+
+### Observability
+
+- Prometheus metrics from `/metrics`.
+- ServiceMonitor and PrometheusRule.
+- Grafana dashboard ConfigMap.
+- Alertmanager routing model.
+- CloudWatch Logs via AWS for Fluent Bit.
+- Structured JSON app logs.
+
+## Deployment documentation
+
+Start here:
+
+- [Production deployment guide](docs/deployment/production-deployment-guide.md)
+- [Verification checklist](docs/deployment/verification-checklist.md)
+- [GitOps application deployment](docs/deployment/gitops-application.md)
+- [Local container deployment](docs/deployment/local-container.md)
+
+Operations:
+
+- [Runbooks](docs/operations/runbooks.md)
+- [Troubleshooting guide](docs/operations/troubleshooting.md)
+- [Rollback guide](docs/operations/rollback.md)
+
+Security and observability:
+
+- [Secrets management](docs/security/secrets-management.md)
+- [Monitoring foundation](docs/observability/monitoring.md)
+- [CloudWatch logging](docs/observability/cloudwatch-logging.md)
+- [Grafana hardening](docs/observability/grafana-hardening.md)
+- [Alertmanager routing](docs/observability/alertmanager-routing.md)
+
+Cost:
+
+- [Cost optimization](docs/cost/cost-optimization.md)
+- [Teardown guide](docs/cost/teardown.md)
+
+## Important deployment placeholders
+
+Before applying to a real cluster, replace:
+
+- `REPLACE_WITH_GITHUB_USERNAME`
+- placeholder AWS account IDs such as `000000000000`
+- placeholder IRSA role ARNs
+- `vpc-replace-with-terraform-output`
+- `replace-with-commit-sha`
+- `REPLACE_WITH_PINNED_KUBE_PROMETHEUS_STACK_VERSION`
+
+These values should come from Terraform outputs, CI output, and verified chart
+indexes.
+
+## Validation commands
+
+```powershell
+python -m ruff check .
+python -m pytest
+terraform "-chdir=terraform" fmt -recursive -check
+terraform "-chdir=terraform/environments/dev" validate
+helm lint ./helm/ai-inference --values ./helm/ai-inference/values-dev.yaml
+```
+
+## What recruiters should notice
+
+This project is not just “an app on Kubernetes.” It demonstrates platform
+engineering judgement:
+
+- clear ownership boundaries between Terraform, Helm, Argo CD, and CI/CD;
+- secure AWS access through IRSA instead of static credentials;
+- GitOps-driven deployment instead of manual cluster mutation;
+- production-style observability and logging;
+- cost-aware architecture decisions;
+- operational documentation for deployment, rollback, and troubleshooting.
+
+## Current limitations
+
+- No live AWS deployment evidence has been captured yet.
+- Docker runtime verification depends on a local Docker engine.
+- `kube-prometheus-stack` chart version must be pinned before real cluster apply.
+- Production TLS, WAF, and Alertmanager receiver integrations are documented but
+  not yet wired with real secrets.
+
+These are intentional and documented so the project remains honest.

@@ -7,10 +7,16 @@ engineering decisions.
 
 - `decisions/`: Architecture Decision Records (ADRs). These preserve the
   context, decision, trade-offs, and consequences behind the design.
-- `diagrams/`: source-controlled architecture, request-flow, delivery-flow,
-  and observability diagrams. Added in a later phase.
+- `diagrams/`: source-controlled architecture, delivery-flow, and observability
+  diagrams.
 - `threat-model/`: assets, trust boundaries, threats, and mitigations. Added
   alongside the security implementation.
+
+## Diagrams
+
+- [System architecture](diagrams/system-architecture.md)
+- [Delivery flow](diagrams/delivery-flow.md)
+- [Observability flow](diagrams/observability-flow.md)
 
 ## Architectural principle
 
