@@ -2,15 +2,15 @@
 
 ```mermaid
 flowchart LR
-  dev[Developer push] --> github[GitHub]
-  github --> ci[GitHub Actions CI]
-  ci --> tests[Tests, lint, Terraform validate, Helm render]
-  ci --> build[Build Docker image]
-  build --> ecr[Amazon ECR]
-  github --> argocd[Argo CD]
-  argocd --> helm[Helm render]
-  helm --> eks[Amazon EKS]
-  eks --> app[AI inference workload]
+  dev["Developer push"] --> github["GitHub"]
+  github --> ci["GitHub Actions CI"]
+  ci --> tests["Tests, lint, Terraform validate, Helm render"]
+  ci --> build["Build Docker image"]
+  build --> ecr["Amazon ECR"]
+  github --> argocd["Argo CD"]
+  argocd --> helm["Helm render"]
+  helm --> eks["Amazon EKS"]
+  eks --> app["AI inference workload"]
 ```
 
 ## Principle

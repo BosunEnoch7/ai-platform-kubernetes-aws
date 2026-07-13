@@ -1,9 +1,9 @@
 # Documentation
 
-Documentation will be developed alongside the system rather than added after
-the implementation.
+Documentation for deployment, operations, security, observability, cost control,
+and portfolio presentation.
 
-## Planned sections
+## Documentation index
 
 - [CI/CD pipeline](ci-cd.md)
 - [Platform add-ons](platform-addons.md)
@@ -36,5 +36,5 @@ the implementation.
   improvements, and screenshot checklist.
 - `reference/`: glossary and supporting technical notes.
 
-Only documentation backed by implemented and verified behavior will be marked
-complete.
+Use the deployment and verification guides before applying the platform to a
+real AWS account.

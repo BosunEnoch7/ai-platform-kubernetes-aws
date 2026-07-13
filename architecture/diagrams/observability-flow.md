@@ -2,16 +2,16 @@
 
 ```mermaid
 flowchart TD
-  app[FastAPI pods] --> metrics[/metrics endpoint]
-  metrics --> serviceMonitor[ServiceMonitor]
-  serviceMonitor --> prometheus[Prometheus]
-  prometheus --> rules[PrometheusRule]
-  rules --> alertmanager[Alertmanager]
-  prometheus --> grafana[Grafana dashboard]
+  app["FastAPI pods"] --> metrics["/metrics endpoint"]
+  metrics --> serviceMonitor["ServiceMonitor"]
+  serviceMonitor --> prometheus["Prometheus"]
+  prometheus --> rules["PrometheusRule"]
+  rules --> alertmanager["Alertmanager"]
+  prometheus --> grafana["Grafana dashboard"]
 
-  app --> stdout[JSON stdout logs]
-  stdout --> fluentBit[AWS for Fluent Bit]
-  fluentBit --> cloudwatch[CloudWatch Logs]
+  app --> stdout["JSON stdout logs"]
+  stdout --> fluentBit["AWS for Fluent Bit"]
+  fluentBit --> cloudwatch["CloudWatch Logs"]
 ```
 
 ## Signals

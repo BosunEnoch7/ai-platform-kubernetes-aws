@@ -2,25 +2,25 @@
 
 ```mermaid
 flowchart TD
-  client[Client] --> alb[AWS Application Load Balancer]
-  alb --> nginx[NGINX Ingress Controller]
-  nginx --> appIngress[App Ingress]
-  appIngress --> service[Kubernetes Service]
-  service --> pods[FastAPI AI Inference Pods]
-  pods --> provider[AI Provider Layer]
+  client["Client"] --> alb["AWS Application Load Balancer"]
+  alb --> nginx["NGINX Ingress Controller"]
+  nginx --> appIngress["App Ingress"]
+  appIngress --> service["Kubernetes Service"]
+  service --> pods["FastAPI AI Inference Pods"]
+  pods --> provider["AI Provider Layer"]
 
-  secretsManager[AWS Secrets Manager] --> externalSecrets[External Secrets Operator]
-  externalSecrets --> k8sSecret[Kubernetes Secret]
+  secretsManager["AWS Secrets Manager"] --> externalSecrets["External Secrets Operator"]
+  externalSecrets --> k8sSecret["Kubernetes Secret"]
   k8sSecret --> pods
 
-  pods --> metrics[/metrics]
-  metrics --> prometheus[Prometheus]
-  prometheus --> grafana[Grafana]
-  prometheus --> alertmanager[Alertmanager]
+  pods --> metrics["/metrics endpoint"]
+  metrics --> prometheus["Prometheus"]
+  prometheus --> grafana["Grafana"]
+  prometheus --> alertmanager["Alertmanager"]
 
-  pods --> logs[stdout JSON logs]
-  logs --> fluentBit[AWS for Fluent Bit]
-  fluentBit --> cloudWatch[CloudWatch Logs]
+  pods --> logs["stdout JSON logs"]
+  logs --> fluentBit["AWS for Fluent Bit"]
+  fluentBit --> cloudWatch["CloudWatch Logs"]
 ```
 
 ## Boundary notes
