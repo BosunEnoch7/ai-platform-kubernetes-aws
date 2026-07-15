@@ -7,6 +7,29 @@ This guide helps remove demo resources safely.
 EKS, NAT Gateways, load balancers, worker nodes, logs, and public IP resources
 can continue billing after a demo is finished.
 
+## Emergency cost stop
+
+If you only have time to stop the biggest charges, check and remove these first:
+
+```powershell
+aws eks list-clusters --region eu-west-1
+aws ec2 describe-nat-gateways --region eu-west-1 --filter Name=state,Values=available,pending,deleting
+aws elbv2 describe-load-balancers --region eu-west-1
+aws ec2 describe-addresses --region eu-west-1
+```
+
+Priority order:
+
+1. EKS clusters.
+2. NAT Gateways.
+3. Public load balancers.
+4. Unattached Elastic IPs.
+5. Worker nodes, EBS volumes, and large log groups.
+
+Terraform destroy is still the preferred path because it preserves dependency
+order. Manual deletion is for emergencies, abandoned state, or interrupted
+demos.
+
 ## 1. Remove app GitOps resources
 
 ```powershell

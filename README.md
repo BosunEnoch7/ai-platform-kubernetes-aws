@@ -61,6 +61,21 @@ Detailed diagrams:
 | Logging | Structured JSON app logs shipped to CloudWatch Logs with AWS for Fluent Bit |
 | Operations | Deployment guide, runbooks, rollback guide, troubleshooting guide, cost guide |
 
+## Portfolio evidence
+
+This repository is designed to be reviewed safely even when the AWS environment
+is not left running. The code, infrastructure, GitOps manifests, and operations
+docs are committed; live AWS screenshots should be captured during a short
+controlled deployment window and removed from service afterward to avoid idle
+EKS, NAT Gateway, and load balancer cost.
+
+Start with the evidence manifest:
+
+- [Portfolio evidence and validation notes](docs/portfolio/evidence.md)
+- [Verification checklist](docs/deployment/verification-checklist.md)
+- [Screenshots checklist](docs/portfolio/screenshots-checklist.md)
+- [Teardown guide](docs/cost/teardown.md)
+
 ## Platform ownership model
 
 | Tool | Owns |
@@ -169,8 +184,11 @@ Cost:
 
 ## Screenshots and deployment evidence
 
-Running evidence should be captured after live deployment and stored in
-[screenshots](screenshots/).
+Running evidence should be captured after a live deployment and stored in
+[screenshots](screenshots/). The project intentionally avoids fabricated or
+stale cloud screenshots. If the AWS environment is torn down for cost control,
+use the evidence manifest and validation commands below to understand what has
+been implemented and what should be captured during the next live demo window.
 
 Recommended evidence:
 

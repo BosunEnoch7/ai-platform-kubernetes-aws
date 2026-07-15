@@ -1,6 +1,11 @@
-# Screenshots
+# Screenshots and running evidence
 
-This folder is reserved for sanitized running evidence after a real deployment.
+This folder stores sanitized running evidence from a real deployment window.
+
+The project should not commit invented cloud screenshots. If the AWS
+environment has been torn down to control cost, use the evidence manifest in
+[`docs/portfolio/evidence.md`](../docs/portfolio/evidence.md) and capture these
+screenshots during the next short live demo.
 
 Do not commit:
 
@@ -39,4 +44,6 @@ The full checklist lives at:
 docs/portfolio/screenshots-checklist.md
 ```
 
-Add screenshots only after the infrastructure is deployed and verified.
+Add screenshots only after the infrastructure is deployed and verified. After
+capture, tear down the environment using
+[`docs/cost/teardown.md`](../docs/cost/teardown.md).
