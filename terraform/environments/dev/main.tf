@@ -32,13 +32,17 @@ module "eks" {
 module "workload_foundation" {
   source = "../../modules/workload_foundation"
 
-  name                       = local.name_prefix
-  environment                = local.environment
-  oidc_provider_arn          = module.eks.oidc_provider_arn
-  oidc_issuer_hostpath       = module.eks.oidc_issuer_hostpath
-  kubernetes_namespace       = var.kubernetes_namespace
-  kubernetes_service_account = var.kubernetes_service_account
-  tags                       = local.common_tags
+  name                              = local.name_prefix
+  environment                       = local.environment
+  oidc_provider_arn                 = module.eks.oidc_provider_arn
+  oidc_issuer_hostpath              = module.eks.oidc_issuer_hostpath
+  kubernetes_namespace              = var.kubernetes_namespace
+  kubernetes_service_account        = var.kubernetes_service_account
+  github_repository                 = var.github_repository
+  github_branch                     = var.github_branch
+  create_github_oidc_provider       = var.create_github_oidc_provider
+  existing_github_oidc_provider_arn = var.existing_github_oidc_provider_arn
+  tags                              = local.common_tags
 }
 
 module "platform_addons" {

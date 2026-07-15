@@ -14,8 +14,8 @@ This project uses GitHub Actions for validation and image delivery.
 GitHub Actions does not apply Kubernetes manifests directly.
 
 ```text
-GitHub Actions → build, test, push image
-Argo CD        → reconcile Kubernetes desired state from Git
+GitHub Actions -> build, test, push image
+Argo CD        -> reconcile Kubernetes desired state from Git
 ```
 
 This matters because if CI deploys directly with `kubectl apply`, Argo CD no
@@ -29,6 +29,12 @@ Create a GitHub environment named `dev` and configure:
 ### Environment secret
 
 - `AWS_ROLE_TO_ASSUME`: IAM role ARN trusted by GitHub Actions OIDC.
+
+Terraform outputs this value as:
+
+```text
+github_actions_ecr_publisher_role_arn
+```
 
 ### Environment variables
 

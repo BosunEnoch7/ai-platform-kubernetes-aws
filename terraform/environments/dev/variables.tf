@@ -76,6 +76,30 @@ variable "kubernetes_service_account" {
   default     = "ai-inference"
 }
 
+variable "github_repository" {
+  description = "GitHub repository allowed to push images to ECR through OIDC."
+  type        = string
+  default     = "BosunEnoch7/ai-platform-kubernetes-aws"
+}
+
+variable "github_branch" {
+  description = "Git branch allowed to push images to ECR through OIDC."
+  type        = string
+  default     = "main"
+}
+
+variable "create_github_oidc_provider" {
+  description = "Create the account-level GitHub Actions OIDC provider."
+  type        = bool
+  default     = true
+}
+
+variable "existing_github_oidc_provider_arn" {
+  description = "Existing GitHub Actions OIDC provider ARN when the account already manages it."
+  type        = string
+  default     = null
+}
+
 variable "additional_tags" {
   description = "Additional non-sensitive resource tags."
   type        = map(string)

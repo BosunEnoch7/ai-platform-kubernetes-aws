@@ -15,6 +15,7 @@ captured during a live AWS demo.
 | Terraform AWS platform | [`terraform/`](../../terraform/) |
 | Argo CD GitOps applications | [`argocd/`](../../argocd/) |
 | Kubernetes platform manifests | [`k8s/`](../../k8s/) |
+| GitHub Actions OIDC image publisher role | [`terraform/modules/workload_foundation/github_actions_oidc.tf`](../../terraform/modules/workload_foundation/github_actions_oidc.tf) |
 | Architecture diagrams | [`architecture/diagrams/`](../../architecture/diagrams/) |
 | Architecture decisions | [`architecture/decisions/`](../../architecture/decisions/) |
 | Operations docs | [`docs/operations/`](../operations/) |

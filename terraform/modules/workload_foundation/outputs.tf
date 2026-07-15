@@ -27,3 +27,8 @@ output "workload_role_arn" {
   description = "IRSA role ARN for the AI inference service account."
   value       = aws_iam_role.ai_inference.arn
 }
+
+output "github_actions_ecr_publisher_role_arn" {
+  description = "IAM role ARN for GitHub Actions OIDC image publishing."
+  value       = try(aws_iam_role.github_actions_ecr_publisher[0].arn, null)
+}
