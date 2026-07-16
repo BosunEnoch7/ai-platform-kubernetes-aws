@@ -21,8 +21,6 @@ and portfolio presentation.
 - [Alertmanager routing](observability/alertmanager-routing.md)
 - [Grafana hardening](observability/grafana-hardening.md)
 - [CloudWatch logging](observability/cloudwatch-logging.md)
-- [STAR stories](portfolio/star-stories.md)
-- [Resume bullets](portfolio/resume-bullets.md)
 - [Portfolio evidence and validation notes](portfolio/evidence.md)
 - [Lessons learned](portfolio/lessons-learned.md)
 - [Future improvements](portfolio/future-improvements.md)
@@ -33,8 +31,8 @@ and portfolio presentation.
 - `operations/`: runbooks, rollback, recovery, and troubleshooting.
 - `security/`: identity, secrets, trust boundaries, and hardening.
 - `cost/`: estimates, budget controls, and optimization.
-- `portfolio/`: evidence notes, STAR stories, resume bullets, lessons learned,
-  future improvements, and screenshot checklist.
+- `portfolio/`: evidence notes, lessons learned, future improvements, and
+  screenshot checklist.
 - `reference/`: glossary and supporting technical notes.
 
 Use the deployment and verification guides before applying the platform to a

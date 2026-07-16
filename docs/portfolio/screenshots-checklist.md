@@ -55,5 +55,5 @@ or sensitive URLs.
 ## Portfolio polish
 
 - [ ] Final architecture diagram.
-- [ ] Resume bullets.
-- [ ] STAR stories.
+- [ ] Public README evidence section.
+- [ ] Sanitized real screenshots in `screenshots/`.

@@ -32,3 +32,19 @@ terraform.tfvars
 
 # Local test output
 test-results/
+
+# Private career and interview materials
+*interview*
+*Interview*
+*linkedin*
+*LinkedIn*
+*resume*
+*Resume*
+*cv*
+*CV*
+*star-stories*
+*STAR*
+*recruiter*
+*Recruiter*
+*job-application*
+*personal-notes*

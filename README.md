@@ -101,7 +101,7 @@ same resources.
 | [k8s](k8s/) | Platform manifests and dashboard ConfigMaps |
 | [architecture](architecture/) | Diagrams and Architecture Decision Records |
 | [docs](docs/) | Deployment, operations, security, observability, cost, and portfolio docs |
-| [screenshots](screenshots/) | Sanitized running evidence after live deployment |
+| [screenshots](screenshots/) | Placeholder folder and checklist for future real deployment screenshots |
 | [.github/workflows](.github/workflows/) | CI/CD workflows |
 
 ## Feature highlights
@@ -184,11 +184,12 @@ Cost:
 
 ## Screenshots and deployment evidence
 
-Running evidence should be captured after a live deployment and stored in
-[screenshots](screenshots/). The project intentionally avoids fabricated or
-stale cloud screenshots. If the AWS environment is torn down for cost control,
-use the evidence manifest and validation commands below to understand what has
-been implemented and what should be captured during the next live demo window.
+Running evidence should be captured from a real deployment and stored in
+[screenshots](screenshots/). This repository intentionally avoids generic or
+fabricated cloud screenshots. If the AWS environment is torn down for cost
+control, use the evidence manifest and validation commands below to understand
+what has been implemented and what should be captured during the next live demo
+window.
 
 Recommended evidence:
 

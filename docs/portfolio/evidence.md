@@ -80,19 +80,18 @@ Recommended screenshots:
 See the full checklist in
 [`docs/portfolio/screenshots-checklist.md`](screenshots-checklist.md).
 
-## Live evidence captured
+## Live evidence status
 
-The July 16, 2026 controlled deployment window produced sanitized evidence in:
+No public screenshots are currently committed. That is intentional: weak or
+generic images make the portfolio look less credible. The next evidence pass
+should capture real AWS Console, GitHub Actions, Kubernetes, Argo CD,
+Prometheus, Grafana, Alertmanager, CloudWatch, and application screenshots
+during a short controlled deployment window.
 
-```text
-screenshots/live-evidence-2026-07-16/
-```
-
-That evidence proves the Terraform-managed AWS foundation reached a clean,
-reconciled state before teardown. The application image push was blocked by
-workstation registry connectivity, not by repository architecture; GitHub
-Actions OIDC image publishing is implemented for the next stable network
-window.
+The July 16, 2026 validation work proved the Terraform-managed AWS foundation
+could reach a clean reconciled state before teardown. The final public
+repository should still use real visual evidence captured directly from the
+running platform before a recruiter-facing release.
 
 ## Cost-control evidence
 

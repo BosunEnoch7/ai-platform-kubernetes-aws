@@ -1,11 +1,11 @@
 # Screenshots and running evidence
 
-This folder stores sanitized running evidence from a real deployment window.
+This folder is reserved for real deployment screenshots.
 
 The project should not commit invented cloud screenshots. If the AWS
 environment has been torn down to control cost, use the evidence manifest in
-[`docs/portfolio/evidence.md`](../docs/portfolio/evidence.md) and capture these
-screenshots during the next short live demo.
+[`docs/portfolio/evidence.md`](../docs/portfolio/evidence.md) and capture fresh
+screenshots during the next short live deployment window.
 
 Do not commit:
 
