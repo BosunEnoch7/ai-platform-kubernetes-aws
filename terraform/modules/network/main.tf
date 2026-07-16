@@ -208,7 +208,7 @@ data "aws_iam_policy_document" "flow_logs_assume_role" {
 resource "aws_iam_role" "flow_logs" {
   count = var.enable_flow_logs ? 1 : 0
 
-  name_prefix        = "${var.name}-flow-logs-"
+  name               = "${var.name}-flow-logs"
   assume_role_policy = data.aws_iam_policy_document.flow_logs_assume_role[0].json
 
   tags = local.common_tags

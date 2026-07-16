@@ -26,7 +26,9 @@ Thumbs.db
 *.tfstate.*
 crash.log
 *.tfplan
+tfplan
 backend.hcl
+terraform.tfvars
 
 # Local test output
 test-results/
