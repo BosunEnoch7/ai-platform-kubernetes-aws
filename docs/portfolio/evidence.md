@@ -80,6 +80,20 @@ Recommended screenshots:
 See the full checklist in
 [`docs/portfolio/screenshots-checklist.md`](screenshots-checklist.md).
 
+## Live evidence captured
+
+The July 16, 2026 controlled deployment window produced sanitized evidence in:
+
+```text
+screenshots/live-evidence-2026-07-16/
+```
+
+That evidence proves the Terraform-managed AWS foundation reached a clean,
+reconciled state before teardown. The application image push was blocked by
+workstation registry connectivity, not by repository architecture; GitHub
+Actions OIDC image publishing is implemented for the next stable network
+window.
+
 ## Cost-control evidence
 
 A production-minded portfolio should show teardown discipline. After each demo,
